@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "name": "Pixiv Novel",
+    "author": "lynxdarealest",
+    "version": 2,
+    "source": "https://www.pixiv.net/novel",
+    "regexp": "https://www\\.pixiv\\.net/novel/(show\\.php\\?id=\\d+|series/\\d+).*",
+    "description": "Doc Pixiv Novel cho VBook. Ho tro search, tag da luu, bookmarks va watchlist bang cookie PHPSESSID.",
+    "locale": "ja_JP",
+    "language": "javascript",
+    "type": "novel",
+    "tag": "pixiv"
+  },
+  "script": {
+    "home": "home.js",
+    "detail": "detail.js",
+    "toc": "toc.js",
+    "genre": "genre.js",
+    "search": "search.js",
+    "page": "page.js",
+    "chap": "chap.js"
+  }
+}

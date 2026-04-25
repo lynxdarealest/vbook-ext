@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "author": "lynxdarealest",
+    "description": "Custom VBook extensions"
+  },
+  "data": [
+    {
+      "name": "Pixiv Novel",
+      "author": "lynxdarealest",
+      "path": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv-novel/plugin.zip",
+      "version": 2,
+      "source": "https://www.pixiv.net/novel",
+      "icon": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv-novel/icon.png",
+      "description": "Doc Pixiv Novel cho VBook. Ho tro search, tag da luu, bookmarks va watchlist bang cookie PHPSESSID.",
+      "type": "novel",
+      "locale": "ja_JP",
+      "tag": "pixiv"
+    }
+  ]
+}
