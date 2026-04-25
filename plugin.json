@@ -7,14 +7,13 @@
     {
       "name": "Pixiv Novel",
       "author": "lynxdarealest",
-      "path": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv-novel/plugin.zip",
-      "version": 2,
-      "source": "https://www.pixiv.net/novel",
-      "icon": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv-novel/icon.png",
-      "description": "Doc Pixiv Novel cho VBook. Ho tro search, tag da luu, bookmarks va watchlist bang cookie PHPSESSID.",
-      "type": "novel",
-      "locale": "ja_JP",
-      "tag": "pixiv"
+      "path": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/plugin.zip",
+      "version": 5,
+      "source": "https://www.pixiv.net/en/tags/%E4%B8%AD%E6%96%87/novels",
+      "icon": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/icon.png",
+      "description": "Doc Pixiv theo ban toi gian de uu tien tuong thich VBook.",
+      "type": "chinese_novel",
+      "locale": "zh_CN"
     }
   ]
 }

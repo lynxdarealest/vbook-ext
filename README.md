@@ -8,6 +8,4 @@ Them repo vao VBook bang file:
 
 Neu muon bat bookmarks, watchlist va bookmark tags theo tai khoan Pixiv, sua:
 
-- `pixiv-novel/src/config.js`
-
-va dien `PHPSESSID` cua tai khoan Pixiv.
+- `pixiv/plugin.json`
