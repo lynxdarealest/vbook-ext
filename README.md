@@ -6,6 +6,4 @@ Them repo vao VBook bang file:
 
 - `https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/plugin.json`
 
-Neu muon bat bookmarks, watchlist va bookmark tags theo tai khoan Pixiv, sua:
-
-- `pixiv/plugin.json`
+De dung `Bookmarks`, `Watchlist` va `bookmark tags`, dang nhap Pixiv trong browser noi bo cua app roi mo lai extension.

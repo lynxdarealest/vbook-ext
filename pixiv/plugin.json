@@ -2,10 +2,10 @@
   "metadata": {
     "name": "Pixiv Novel",
     "author": "lynxdarealest",
-    "version": 5,
-    "source": "https://www.pixiv.net/en/tags/%E4%B8%AD%E6%96%87/novels",
-    "regexp": "(www.|m.)?pixiv.net/novel/show.php(.*?)",
-    "description": "Doc truyen tren Pixiv theo ban toi gian de tuong thich VBook.",
+    "version": 6,
+    "source": "https://www.pixiv.net/novel",
+    "regexp": "(www.|m.)?pixiv.net/novel/(show\\.php\\?id=\\d+|series/\\d+).*",
+    "description": "Doc Pixiv Novel cho VBook. Ho tro search, tag da luu, bookmarks va watchlist bang dang nhap trong app.",
     "locale": "zh_CN",
     "language": "javascript",
     "type": "chinese_novel"
@@ -14,6 +14,9 @@
     "home": "home.js",
     "detail": "detail.js",
     "toc": "toc.js",
+    "genre": "genre.js",
+    "search": "search.js",
+    "page": "page.js",
     "chap": "chap.js"
   }
 }

@@ -1,8 +1,16 @@
+load("pixiv.js");
+
 function execute() {
-    return Response.success([
-        { title: "中文", input: encodeURIComponent("中文"), script: "gen.js" },
-        { title: "百合", input: encodeURIComponent("百合"), script: "gen.js" },
-        { title: "恋愛", input: encodeURIComponent("恋愛"), script: "gen.js" },
-        { title: "ファンタジー", input: encodeURIComponent("ファンタジー"), script: "gen.js" }
-    ]);
+    var tabs = [
+        { title: "Discovery", input: "discovery", script: "home_feed.js" },
+        { title: "Top picks", input: "top", script: "home_feed.js" }
+    ];
+
+    if (hasLogin()) {
+        tabs.push({ title: "Follow latest", input: "follow_latest", script: "home_feed.js" });
+        tabs.push({ title: "Watchlist", input: "watch_list", script: "home_feed.js" });
+        tabs.push({ title: "Bookmarks", input: "bookmarks", script: "home_feed.js" });
+    }
+
+    return Response.success(tabs);
 }

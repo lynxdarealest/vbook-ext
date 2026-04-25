@@ -1,40 +1,63 @@
 load("pixiv.js");
 
 function execute(url) {
+    var seriesId = parseSeriesId(url);
+    if (seriesId) {
+        var series = getSeriesDetailById(seriesId);
+        if (!series) return null;
+
+        var tagItems = [];
+        (series.tags || []).forEach(function (tag) {
+            tagItems.push(buildTagItem(tag));
+        });
+
+        return Response.success({
+            name: series.title || "",
+            cover: coverFromSeries(series),
+            host: BASE_URL,
+            author: series.userName || "",
+            description: series.caption || "",
+            detail: joinText([
+                series.language,
+                series.displaySeriesContentCount ? ("Chapters " + series.displaySeriesContentCount) : "",
+                formatDate(series.updateDate),
+                series.watchCount ? ("Watchers " + series.watchCount) : ""
+            ]),
+            ongoing: !series.isConcluded,
+            genres: tagItems
+        });
+    }
+
     var novelId = parseNovelId(url);
     if (!novelId) return null;
-
-    var detail = fetchJson(BASE_URL + "/ajax/novel/" + novelId, BASE_URL + "/novel/show.php?id=" + novelId);
+    var detail = getNovelDetailById(novelId);
     if (!detail) return null;
 
-    var genres = [];
-    var tags = detail.tags && detail.tags.tags ? detail.tags.tags : [];
-    tags.forEach(function (entry) {
-        if (!entry || !entry.tag) return;
-        genres.push({
-            title: entry.tag,
-            input: encodeURIComponent(entry.tag),
-            script: "gen.js"
+    var tags = [];
+    if (detail.tags && detail.tags.tags) {
+        detail.tags.tags.forEach(function (tag) {
+            tags.push(buildTagItem(tag.tag));
         });
-    });
+    }
 
-    var suggests = [];
-    if (detail.seriesNavData && detail.seriesNavData.seriesId) {
-        suggests.push({
-            title: detail.seriesNavData.title || "Series",
-            input: detail.seriesNavData.seriesId,
-            script: "suggest.js"
-        });
+    var ongoing = false;
+    if (detail.seriesNavData) {
+        ongoing = !detail.seriesNavData.isConcluded;
     }
 
     return Response.success({
         name: detail.title || "",
         cover: detail.coverUrl || "",
+        host: BASE_URL,
         author: detail.userName || "",
-        description: (detail.createDate || "") + "<br/>View: " + (detail.viewCount || 0) + "<br/>" + (detail.description || ""),
-        suggests: suggests,
-        genres: genres,
-        detail: "Tac gia: " + (detail.userName || ""),
-        host: BASE_URL
+        description: detail.description || "",
+        detail: joinText([
+            detail.language,
+            detail.wordCount ? ("Words " + detail.wordCount) : "",
+            formatDate(detail.createDate),
+            detail.seriesNavData ? detail.seriesNavData.title : ""
+        ]),
+        ongoing: ongoing,
+        genres: tags
     });
 }

@@ -8,10 +8,10 @@
       "name": "Pixiv Novel",
       "author": "lynxdarealest",
       "path": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/plugin.zip",
-      "version": 5,
-      "source": "https://www.pixiv.net/en/tags/%E4%B8%AD%E6%96%87/novels",
+      "version": 6,
+      "source": "https://www.pixiv.net/novel",
       "icon": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/icon.png",
-      "description": "Doc Pixiv theo ban toi gian de uu tien tuong thich VBook.",
+      "description": "Doc Pixiv Novel. Ho tro search, tag da luu, bookmarks va watchlist bang dang nhap trong app.",
       "type": "chinese_novel",
       "locale": "zh_CN"
     }
