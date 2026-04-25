@@ -1,6 +1,7 @@
 load("pixiv.js");
 
 function execute() {
+    var favoriteTags = [];
     var tags = [];
     var seen = {};
     var result = [];
@@ -16,7 +17,7 @@ function execute() {
         getBookmarkTagNames(userId).forEach(function (tag) {
             if (!seen[tag]) {
                 seen[tag] = true;
-                tags.push(tag);
+                favoriteTags.push(tag);
             }
         });
     }
@@ -26,6 +27,10 @@ function execute() {
             seen[tag] = true;
             tags.push(tag);
         }
+    });
+
+    favoriteTags.forEach(function (tag) {
+        result.push(buildFavoriteTagItem(tag));
     });
 
     tags.forEach(function (tag) {

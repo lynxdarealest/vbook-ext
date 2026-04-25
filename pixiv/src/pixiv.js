@@ -163,6 +163,14 @@ function buildTagItem(tag) {
     };
 }
 
+function buildFavoriteTagItem(tag) {
+    return {
+        title: "★ " + tag,
+        input: tag,
+        script: "tag_search.js"
+    };
+}
+
 function extractUserIdFromText(text) {
     if (!text) return "";
     var patterns = [
@@ -233,13 +241,21 @@ function getBookmarkTagNames(userId) {
         BASE_URL + "/users/" + userId + "/bookmarks/novels"
     );
     if (!body) return [];
-    var raw = body.public || body.tags || body;
     var list = [];
-    if (!raw || !raw.forEach) return list;
-    raw.forEach(function (entry) {
-        var tag = entry && (entry.tag || entry.name || entry.value || entry);
-        if (tag) list.push(String(tag));
+    var groups = [];
+
+    if (body.public && body.public.forEach) groups.push(body.public);
+    if (body.private && body.private.forEach) groups.push(body.private);
+    if (!groups.length && body.tags && body.tags.forEach) groups.push(body.tags);
+    if (!groups.length && body.forEach) groups.push(body);
+
+    groups.forEach(function (entries) {
+        entries.forEach(function (entry) {
+            var tag = entry && (entry.tag || entry.name || entry.value || entry);
+            if (tag) list.push(String(tag));
+        });
     });
+
     return list;
 }
 
