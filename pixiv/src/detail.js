@@ -15,14 +15,14 @@ function execute(url) {
             cover: coverFromSeries(series),
             host: BASE_URL,
             author: series.userName || "",
-            description: buildAuthorRecommendationDescription(recommendations),
-            detail: joinText([
+            description: buildDescriptionWithRecommendations(series.caption || series.description || "", recommendations),
+            detail: joinLines([
                 formatWordCount(series.wordCount || series.totalWordCount),
                 formatUpdatedDate(series.updateDate),
                 formatChapterCount(series.displaySeriesContentCount || series.total)
             ]),
             ongoing: !series.isConcluded,
-            genres: []
+            genres: buildGenreItems(series.tags || [])
         });
     }
 
@@ -39,7 +39,7 @@ function execute(url) {
     if (detail.seriesNavData) {
         ongoing = !detail.seriesNavData.isConcluded;
     }
-    var recommendations = getAuthorNovelRecommendations(detail.userId, detail.userName, {
+    var recommendations = getAuthorNovelRecommendations(detail.userId || (detail.user && detail.user.id) || "", detail.userName, {
         excludeNovelId: novelId,
         excludeSeriesId: detail.seriesNavData ? detail.seriesNavData.seriesId : "",
         limit: 3
@@ -50,13 +50,13 @@ function execute(url) {
         cover: detail.coverUrl || "",
         host: BASE_URL,
         author: detail.userName || "",
-        description: buildAuthorRecommendationDescription(recommendations),
-        detail: joinText([
+        description: buildDescriptionWithRecommendations(detail.description || "", recommendations),
+        detail: joinLines([
             formatWordCount(detail.wordCount),
             formatUpdatedDate((seriesDetail && seriesDetail.updateDate) || detail.updateDate || detail.createDate),
             formatChapterCount((seriesDetail && (seriesDetail.displaySeriesContentCount || seriesDetail.total)) || 1)
         ]),
         ongoing: ongoing,
-        genres: []
+        genres: buildGenreItems(detail.tags && detail.tags.tags ? detail.tags.tags : [])
     });
 }

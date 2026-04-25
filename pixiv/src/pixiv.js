@@ -80,6 +80,14 @@ function joinText(parts) {
     return filtered.join(" • ");
 }
 
+function joinLines(parts) {
+    var filtered = [];
+    for (var i = 0; i < parts.length; i++) {
+        if (parts[i]) filtered.push(parts[i]);
+    }
+    return filtered.join("\n");
+}
+
 function formatDate(value) {
     if (!value) return "";
     try {
@@ -101,6 +109,10 @@ function formatChapterCount(value) {
 function formatUpdatedDate(value) {
     var date = formatDate(value);
     return date ? ("Updated " + date) : "";
+}
+
+function normalizeDescriptionText(text) {
+    return stripHtml(text || "").replace(/\n{3,}/g, "\n\n").trim();
 }
 
 function coverFromNovel(item) {
@@ -175,6 +187,17 @@ function buildTagItem(tag) {
         input: tag,
         script: "tag_search.js"
     };
+}
+
+function buildGenreItems(rawTags) {
+    var items = [];
+    (rawTags || []).forEach(function (entry) {
+        var tag = entry && (entry.tag || entry.name || entry.value || entry);
+        if (tag) {
+            items.push(buildTagItem(String(tag)));
+        }
+    });
+    return items;
 }
 
 function buildFavoriteTagItem(tag) {
@@ -411,16 +434,83 @@ function getBookmarks(page) {
     return body.works || body.novels || [];
 }
 
-function buildAuthorRecommendationDescription(items) {
-    if (!items || !items.length) return "";
-    var lines = ["Đề xuất cùng tác giả:"];
-    items.forEach(function (item) {
-        lines.push("• " + item.name + " — " + item.link);
-    });
-    return lines.join("\n");
+function getUserProfileAll(userId) {
+    if (!userId) return null;
+    return fetchJson(
+        BASE_URL + "/ajax/user/" + userId + "/profile/all",
+        BASE_URL + "/member.php?id=" + userId
+    );
 }
 
-function getAuthorNovelRecommendations(userId, userName, options) {
+function getProfileNovelIds(profileBody) {
+    var ids = [];
+    var novels = profileBody && profileBody.novels;
+    if (!novels) return ids;
+
+    if (novels.forEach) {
+        novels.forEach(function (entry) {
+            if (entry && entry.id) {
+                ids.push(String(entry.id));
+            } else if (entry != null) {
+                ids.push(String(entry));
+            }
+        });
+        return ids;
+    }
+
+    if (typeof novels === "object") {
+        Object.keys(novels).forEach(function (id) {
+            ids.push(String(id));
+        });
+    }
+
+    return ids;
+}
+
+function getAuthorNovelRecommendationsByProfile(userId, options) {
+    if (!userId) return [];
+
+    options = options || {};
+    var excludeNovelId = String(options.excludeNovelId || "");
+    var excludeSeriesId = String(options.excludeSeriesId || "");
+    var limit = parseInt(options.limit || "3", 10);
+    var profileBody = getUserProfileAll(userId);
+    var items = [];
+    var seen = {};
+
+    getProfileNovelIds(profileBody).forEach(function (itemId) {
+        if (items.length >= limit) return;
+        if (!itemId || itemId === excludeNovelId || seen[itemId]) return;
+
+        var novel = getNovelDetailById(itemId);
+        if (!novel) return;
+        if (excludeSeriesId && novel.seriesNavData && String(novel.seriesNavData.seriesId || "") === excludeSeriesId) return;
+
+        seen[itemId] = true;
+        items.push({
+            name: novel.title || "",
+            link: BASE_URL + "/novel/show.php?id=" + itemId
+        });
+    });
+
+    if (items.length < limit && profileBody && profileBody.novelSeries && profileBody.novelSeries.forEach) {
+        profileBody.novelSeries.forEach(function (series) {
+            var seriesId = String(series && series.id || "");
+            if (items.length >= limit) return;
+            if (!seriesId || seriesId === excludeSeriesId || seen["series:" + seriesId]) return;
+
+            seen["series:" + seriesId] = true;
+            items.push({
+                name: series.title || "",
+                link: BASE_URL + "/novel/series/" + seriesId
+            });
+        });
+    }
+
+    return items;
+}
+
+function getAuthorNovelRecommendationsBySearch(userId, userName, options) {
     if (!userName) return [];
 
     options = options || {};
@@ -450,6 +540,28 @@ function getAuthorNovelRecommendations(userId, userName, options) {
     });
 
     return items.slice(0, limit);
+}
+
+function getAuthorNovelRecommendations(userId, userName, options) {
+    var items = getAuthorNovelRecommendationsByProfile(userId, options);
+    if (items.length) return items;
+    return getAuthorNovelRecommendationsBySearch(userId, userName, options);
+}
+
+function buildDescriptionWithRecommendations(introduction, items) {
+    var sections = [];
+    var intro = normalizeDescriptionText(introduction);
+    if (intro) sections.push(intro);
+
+    if (items && items.length) {
+        var lines = ["Đề xuất cùng tác giả:"];
+        items.forEach(function (item) {
+            lines.push("• " + item.name);
+        });
+        sections.push(lines.join("\n"));
+    }
+
+    return sections.join("\n\n");
 }
 
 function renderContentHtml(detailBody) {
