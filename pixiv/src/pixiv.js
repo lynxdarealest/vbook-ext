@@ -1,5 +1,5 @@
 var BASE_URL = "https://www.pixiv.net";
-var LOGIN_URL = "https://www.pixiv.net/";
+var LOGIN_URL = "https://accounts.pixiv.net/login?lang=en";
 var SERIES_PAGE_SIZE = 30;
 var CURRENT_USER_ID = null;
 var LOGGED_IN = false;

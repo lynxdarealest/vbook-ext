@@ -5,7 +5,7 @@
     "version": 11,
     "source": "https://www.pixiv.net/novel",
     "regexp": "(www.|m.)?pixiv.net/novel/(show\\.php\\?id=\\d+|series/\\d+).*",
-    "description": "Extension làm bởi Lynx. Yêu cầu đăng nhập trước khi dùng: https://www.pixiv.net/",
+    "description": "Extension làm bởi Lynx. Yêu cầu đăng nhập trước khi dùng: https://accounts.pixiv.net/login?lang=en",
     "locale": "zh_CN",
     "language": "javascript",
     "type": "chinese_novel"
