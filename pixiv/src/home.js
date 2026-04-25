@@ -2,8 +2,7 @@ load("pixiv.js");
 
 function execute() {
     var tabs = [
-        { title: "Discovery", input: "discovery", script: "home_feed.js" },
-        { title: "Top picks", input: "top", script: "home_feed.js" }
+        { title: "Discovery", input: "discovery", script: "home_feed.js" }
     ];
 
     if (hasLogin()) {
