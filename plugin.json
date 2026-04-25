@@ -8,7 +8,7 @@
       "name": "Pixiv Novel",
       "author": "lynxdarealest",
       "path": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/plugin.zip",
-      "version": 11,
+      "version": 1,
       "source": "https://www.pixiv.net/novel",
       "icon": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/icon.png",
       "description": "Extension làm bởi Lynx. Yêu cầu đăng nhập trước khi dùng: https://accounts.pixiv.net/login?lang=en",
