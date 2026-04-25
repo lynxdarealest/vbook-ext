@@ -1,7 +1,7 @@
 {
   "metadata": {
     "author": "lynxdarealest",
-    "description": "Extension làm bởi Lynx"
+    "description": "Extension làm bởi Lynx. Yêu cầu đăng nhập trước khi dùng: https://www.pixiv.net/"
   },
   "data": [
     {
@@ -11,7 +11,7 @@
       "version": 11,
       "source": "https://www.pixiv.net/novel",
       "icon": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/icon.png",
-      "description": "Extension làm bởi Lynx",
+      "description": "Extension làm bởi Lynx. Yêu cầu đăng nhập trước khi dùng: https://www.pixiv.net/",
       "type": "chinese_novel",
       "locale": "zh_CN"
     }

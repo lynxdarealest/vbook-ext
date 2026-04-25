@@ -1,4 +1,5 @@
 var BASE_URL = "https://www.pixiv.net";
+var LOGIN_URL = "https://www.pixiv.net/";
 var SERIES_PAGE_SIZE = 30;
 var CURRENT_USER_ID = null;
 var LOGGED_IN = false;
@@ -169,6 +170,27 @@ function buildFavoriteTagItem(tag) {
         input: tag,
         script: "tag_search.js"
     };
+}
+
+function buildLoginRequiredTab() {
+    return {
+        title: "Đăng nhập Pixiv trước",
+        input: "login_required",
+        script: "home_feed.js"
+    };
+}
+
+function buildLoginRequiredCard() {
+    return {
+        name: "Đăng nhập Pixiv trước khi dùng extension",
+        link: LOGIN_URL,
+        cover: "",
+        description: "Mở link trực tiếp và đăng nhập trong web của app: " + LOGIN_URL
+    };
+}
+
+function isLoginOnlyFeed(input) {
+    return input === "follow_latest" || input === "watch_list" || input === "bookmarks" || input === "login_required";
 }
 
 function extractUserIdFromText(text) {

@@ -5,7 +5,9 @@ function execute(input, page) {
     var items = [];
     var next = null;
 
-    if (input === "discovery") {
+    if (input === "login_required" || (isLoginOnlyFeed(input) && !hasLogin())) {
+        return Response.success([buildLoginRequiredCard()]);
+    } else if (input === "discovery") {
         items = getDiscoveryNovels().map(normalizeNovelCard);
     } else if (input === "top") {
         items = getTopNovels().map(normalizeNovelCard);
