@@ -1,17 +1,17 @@
 {
   "metadata": {
     "author": "lynxdarealest",
-    "description": "Custom VBook extensions"
+    "description": "Extension làm bởi Lynx"
   },
   "data": [
     {
       "name": "Pixiv Novel",
       "author": "lynxdarealest",
       "path": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/plugin.zip",
-      "version": 1.0,
+      "version": 1.1,
       "source": "https://www.pixiv.net/novel",
       "icon": "https://raw.githubusercontent.com/lynxdarealest/vbook-ext/main/pixiv/icon.png",
-      "description": "Doc Pixiv Novel. Ho tro search, tag da luu, bookmarks va watchlist bang dang nhap trong app.",
+      "description": "Extension làm bởi Lynx",
       "type": "chinese_novel",
       "locale": "zh_CN"
     }

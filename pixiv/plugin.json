@@ -2,10 +2,10 @@
   "metadata": {
     "name": "Pixiv Novel",
     "author": "lynxdarealest",
-    "version": 1.0,
+    "version": 1.1,
     "source": "https://www.pixiv.net/novel",
     "regexp": "(www.|m.)?pixiv.net/novel/(show\\.php\\?id=\\d+|series/\\d+).*",
-    "description": "Doc Pixiv Novel cho VBook. Ho tro search, tag da luu, bookmarks va watchlist bang dang nhap trong app.",
+    "description": "Extension làm bởi Lynx",
     "locale": "zh_CN",
     "language": "javascript",
     "type": "chinese_novel"
