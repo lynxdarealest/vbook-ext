@@ -5,10 +5,9 @@ function execute(url) {
     if (seriesId) {
         var series = getSeriesDetailById(seriesId);
         if (!series) return null;
-
-        var tagItems = [];
-        (series.tags || []).forEach(function (tag) {
-            tagItems.push(buildTagItem(tag));
+        var recommendations = getAuthorNovelRecommendations(series.userId, series.userName, {
+            excludeSeriesId: seriesId,
+            limit: 3
         });
 
         return Response.success({
@@ -16,15 +15,14 @@ function execute(url) {
             cover: coverFromSeries(series),
             host: BASE_URL,
             author: series.userName || "",
-            description: series.caption || "",
+            description: buildAuthorRecommendationDescription(recommendations),
             detail: joinText([
-                series.language,
-                series.displaySeriesContentCount ? ("Chapters " + series.displaySeriesContentCount) : "",
-                formatDate(series.updateDate),
-                series.watchCount ? ("Watchers " + series.watchCount) : ""
+                formatWordCount(series.wordCount || series.totalWordCount),
+                formatUpdatedDate(series.updateDate),
+                formatChapterCount(series.displaySeriesContentCount || series.total)
             ]),
             ongoing: !series.isConcluded,
-            genres: tagItems
+            genres: []
         });
     }
 
@@ -32,32 +30,33 @@ function execute(url) {
     if (!novelId) return null;
     var detail = getNovelDetailById(novelId);
     if (!detail) return null;
-
-    var tags = [];
-    if (detail.tags && detail.tags.tags) {
-        detail.tags.tags.forEach(function (tag) {
-            tags.push(buildTagItem(tag.tag));
-        });
+    var seriesDetail = null;
+    if (detail.seriesNavData && detail.seriesNavData.seriesId) {
+        seriesDetail = getSeriesDetailById(String(detail.seriesNavData.seriesId));
     }
 
     var ongoing = false;
     if (detail.seriesNavData) {
         ongoing = !detail.seriesNavData.isConcluded;
     }
+    var recommendations = getAuthorNovelRecommendations(detail.userId, detail.userName, {
+        excludeNovelId: novelId,
+        excludeSeriesId: detail.seriesNavData ? detail.seriesNavData.seriesId : "",
+        limit: 3
+    });
 
     return Response.success({
         name: detail.title || "",
         cover: detail.coverUrl || "",
         host: BASE_URL,
         author: detail.userName || "",
-        description: detail.description || "",
+        description: buildAuthorRecommendationDescription(recommendations),
         detail: joinText([
-            detail.language,
-            detail.wordCount ? ("Words " + detail.wordCount) : "",
-            formatDate(detail.createDate),
-            detail.seriesNavData ? detail.seriesNavData.title : ""
+            formatWordCount(detail.wordCount),
+            formatUpdatedDate((seriesDetail && seriesDetail.updateDate) || detail.updateDate || detail.createDate),
+            formatChapterCount((seriesDetail && (seriesDetail.displaySeriesContentCount || seriesDetail.total)) || 1)
         ]),
         ongoing: ongoing,
-        genres: tags
+        genres: []
     });
 }

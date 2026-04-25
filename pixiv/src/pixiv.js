@@ -90,6 +90,19 @@ function formatDate(value) {
     }
 }
 
+function formatWordCount(value) {
+    return value ? ("Words " + value) : "";
+}
+
+function formatChapterCount(value) {
+    return value ? ("Chapters " + value) : "";
+}
+
+function formatUpdatedDate(value) {
+    var date = formatDate(value);
+    return date ? ("Updated " + date) : "";
+}
+
 function coverFromNovel(item) {
     if (!item) return "";
     if (item.url) return item.url;
@@ -118,7 +131,7 @@ function normalizeNovelCard(item) {
         item.userName,
         item.seriesTitle,
         item.language,
-        item.wordCount ? ("Words " + item.wordCount) : "",
+        formatWordCount(item.wordCount),
         item.bookmarkCount ? ("Bookmarks " + item.bookmarkCount) : ""
     ]);
     return {
@@ -135,7 +148,7 @@ function normalizeSeriesCard(item) {
     var info = joinText([
         item.userName,
         item.language,
-        item.displaySeriesContentCount ? ("Chapters " + item.displaySeriesContentCount) : "",
+        formatChapterCount(item.displaySeriesContentCount),
         item.watchCount ? ("Watchers " + item.watchCount) : ""
     ]);
     return {
@@ -396,6 +409,47 @@ function getBookmarks(page) {
     var body = fetchJson(url, BASE_URL + "/users/" + userId + "/bookmarks/novels");
     if (!body) return [];
     return body.works || body.novels || [];
+}
+
+function buildAuthorRecommendationDescription(items) {
+    if (!items || !items.length) return "";
+    var lines = ["Đề xuất cùng tác giả:"];
+    items.forEach(function (item) {
+        lines.push("• " + item.name + " — " + item.link);
+    });
+    return lines.join("\n");
+}
+
+function getAuthorNovelRecommendations(userId, userName, options) {
+    if (!userName) return [];
+
+    options = options || {};
+    var excludeNovelId = String(options.excludeNovelId || "");
+    var excludeSeriesId = String(options.excludeSeriesId || "");
+    var limit = parseInt(options.limit || "3", 10);
+    var result = getSearchResult(userName, "1");
+    var seen = {};
+    var items = [];
+
+    result.items.forEach(function (item) {
+        var itemId = String(item.id || "");
+        var itemSeriesId = String(item.seriesId || "");
+        var itemUserId = String(item.userId || "");
+
+        if (!itemId || itemId === excludeNovelId) return;
+        if (excludeSeriesId && itemSeriesId && itemSeriesId === excludeSeriesId) return;
+        if (userId && itemUserId && itemUserId !== String(userId)) return;
+        if (!userId && item.userName !== userName) return;
+        if (seen[itemId]) return;
+
+        seen[itemId] = true;
+        items.push({
+            name: item.title || "",
+            link: BASE_URL + "/novel/show.php?id=" + itemId
+        });
+    });
+
+    return items.slice(0, limit);
 }
 
 function renderContentHtml(detailBody) {
