@@ -1,6 +1,7 @@
 var BASE_URL = "https://www.pixiv.net";
 var SERIES_PAGE_SIZE = 30;
 var CURRENT_USER_ID = null;
+var LOGGED_IN = false;
 var USER_ID_CHECKED = false;
 
 function makeHeaders(referer) {
@@ -23,6 +24,16 @@ function fetchJson(url, referer) {
         return null;
     }
     return data.body || data;
+}
+
+function fetchText(url, referer) {
+    var response = fetch(url, {
+        headers: makeHeaders(referer)
+    });
+    if (!response.ok) {
+        return "";
+    }
+    return response.text() || "";
 }
 
 function encodeValue(value) {
@@ -152,19 +163,67 @@ function buildTagItem(tag) {
     };
 }
 
-function getCurrentUserId() {
+function extractUserIdFromText(text) {
+    if (!text) return "";
+    var patterns = [
+        /"userId":"(\d+)"/,
+        /"userId":(\d+)/,
+        /"userData":\{"id":"(\d+)"/,
+        /"id":"(\d+)","pixivId"/,
+        /\/users\/(\d+)\/bookmarks\/novels/,
+        /"currentUser":{"id":"(\d+)"/
+    ];
+    for (var i = 0; i < patterns.length; i++) {
+        var match = patterns[i].exec(text);
+        if (match) return String(match[1]);
+    }
+    return "";
+}
+
+function resolveCurrentUserIdFromHtml() {
+    var pages = [
+        BASE_URL + "/bookmark.php?type=novel",
+        BASE_URL + "/novel",
+        BASE_URL + "/"
+    ];
+
+    for (var i = 0; i < pages.length; i++) {
+        var text = fetchText(pages[i], BASE_URL + "/");
+        var userId = extractUserIdFromText(text);
+        if (userId) {
+            return userId;
+        }
+    }
+
+    return "";
+}
+
+function ensureLoginState() {
     if (USER_ID_CHECKED) {
-        return CURRENT_USER_ID || "";
+        return;
     }
 
     var body = fetchJson(BASE_URL + "/ajax/user/extra", BASE_URL + "/");
     USER_ID_CHECKED = true;
+    LOGGED_IN = !!body;
     CURRENT_USER_ID = body ? String(body.userId || body.user_id || (body.user && body.user.id) || "") : "";
-    return CURRENT_USER_ID;
+
+    if (!CURRENT_USER_ID) {
+        CURRENT_USER_ID = resolveCurrentUserIdFromHtml();
+        if (CURRENT_USER_ID) {
+            LOGGED_IN = true;
+        }
+    }
+}
+
+function getCurrentUserId() {
+    ensureLoginState();
+    return CURRENT_USER_ID || "";
 }
 
 function hasLogin() {
-    return !!getCurrentUserId();
+    ensureLoginState();
+    return LOGGED_IN;
 }
 
 function getBookmarkTagNames(userId) {
