@@ -3,8 +3,29 @@ load("config.js");
 var BASE_URL = PIXIV_CONFIG.BASE_URL || "https://www.pixiv.net";
 var SERIES_PAGE_SIZE = 30;
 
+function getRuntimeCookie() {
+    try {
+        if (typeof localCookie !== "undefined" && localCookie && typeof localCookie.getCookie === "function") {
+            return String(localCookie.getCookie() || "").trim();
+        }
+    } catch (error) {
+    }
+    return "";
+}
+
+function getManualCookie() {
+    if (!PIXIV_CONFIG.PHPSESSID) return "";
+    return "PHPSESSID=" + String(PIXIV_CONFIG.PHPSESSID).trim();
+}
+
+function getCookieHeader() {
+    var runtimeCookie = getRuntimeCookie();
+    if (runtimeCookie) return runtimeCookie;
+    return getManualCookie();
+}
+
 function hasLogin() {
-    return !!(PIXIV_CONFIG.PHPSESSID && String(PIXIV_CONFIG.PHPSESSID).trim());
+    return !!getCookieHeader();
 }
 
 function makeHeaders(referer) {
@@ -13,8 +34,9 @@ function makeHeaders(referer) {
         "Accept": "application/json",
         "Referer": referer || BASE_URL
     };
-    if (hasLogin()) {
-        headers.Cookie = "PHPSESSID=" + String(PIXIV_CONFIG.PHPSESSID).trim();
+    var cookie = getCookieHeader();
+    if (cookie) {
+        headers.Cookie = cookie;
     }
     return headers;
 }

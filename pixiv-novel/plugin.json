@@ -19,5 +19,8 @@
     "search": "search.js",
     "page": "page.js",
     "chap": "chap.js"
+  },
+  "config": {
+    "support_url": "https://www.pixiv.net/"
   }
 }
