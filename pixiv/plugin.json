@@ -2,7 +2,7 @@
   "metadata": {
     "name": "Pixiv Novel",
     "author": "lynxdarealest",
-    "version": 6,
+    "version": 1.0,
     "source": "https://www.pixiv.net/novel",
     "regexp": "(www.|m.)?pixiv.net/novel/(show\\.php\\?id=\\d+|series/\\d+).*",
     "description": "Doc Pixiv Novel cho VBook. Ho tro search, tag da luu, bookmarks va watchlist bang dang nhap trong app.",
