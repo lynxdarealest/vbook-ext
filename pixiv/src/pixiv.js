@@ -1,26 +1,11 @@
 var BASE_URL = "https://www.pixiv.net";
 
-function getCookieHeader() {
-    try {
-        if (typeof localCookie !== "undefined" && localCookie && typeof localCookie.getCookie === "function") {
-            return String(localCookie.getCookie() || "").trim();
-        }
-    } catch (error) {
-    }
-    return "";
-}
-
 function makeHeaders(referer) {
-    var headers = {
+    return {
         "User-Agent": "Mozilla/5.0",
         "Referer": referer || BASE_URL,
         "Accept": "application/json"
     };
-    var cookie = getCookieHeader();
-    if (cookie) {
-        headers.Cookie = cookie;
-    }
-    return headers;
 }
 
 function fetchJson(url, referer) {
